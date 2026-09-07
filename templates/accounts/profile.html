@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}My Profile{% endblock %}
+{% block content %}
+<div class="section-title"><h2>My profile</h2>
+  <a href="{% url 'profile_setup' %}" class="btn btn-sm">Edit</a></div>
+<div class="grid grid-2">
+  <div class="card">
+    <h3>{{ profile_user.full_name|default:profile_user.username }}</h3>
+    <p class="meta">📧 {{ profile_user.email }}</p>
+    <p>Age {{ profile_user.age|default:"—" }} · {{ profile_user.get_gender_display }}</p>
+    <p>{{ profile_user.college }} · {{ profile_user.branch }} · {{ profile_user.get_year_display }}</p>
+    <p>🏨 {{ profile_user.hostel }} · 🏢 {{ profile_user.get_preferred_floor_display }}</p>
+    {% if profile_user.cgpa %}<p class="help">CGPA {{ profile_user.cgpa }} (optional)</p>{% endif %}
+  </div>
+  <div class="card">
+    <h3>Lifestyle</h3>
+    {% if profile_user.has_preferences %}{% with p=profile_user.preferences %}
+      <div class="tags">
+        <span class="tag">{{ p.get_sleep_type_display }}</span>
+        <span class="tag">🛏 {{ p.sleep_time }}–{{ p.wake_time }}</span>
+        <span class="tag">💡 {{ p.get_light_preference_display }}</span>
+        <span class="tag">📚 {{ p.get_study_habit_display }}</span>
+        <span class="tag">🔇 {{ p.get_noise_preference_display }}</span>
+        <span class="tag">🧹 {{ p.get_cleanliness_display }}</span>
+        <span class="tag">👥 {{ p.get_social_level_display }}</span>
+        <span class="tag">🚪 {{ p.get_visitor_preference_display }}</span>
+      </div>
+      <a href="{% url 'questionnaire' %}" class="btn btn-ghost btn-sm">Update answers</a>
+    {% endwith %}{% else %}
+      <p class="help">Not completed yet.</p>
+      <a href="{% url 'questionnaire' %}" class="btn btn-sm">Complete questionnaire</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

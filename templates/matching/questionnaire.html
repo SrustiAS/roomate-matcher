@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Lifestyle Questionnaire{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="section-title"><h2>Step 2 · Lifestyle questionnaire</h2></div>
+  <p class="help">Pick what fits you best. This drives your compatibility score.</p>
+  <form method="post">
+    {% csrf_token %}
+
+    {% for field in form %}
+      <div class="q-block">
+        <h3>{{ field.label }}</h3>
+        {% if field.help_text %}<div class="sub">{{ field.help_text }}</div>{% endif %}
+        {% if field.field.widget.input_type == 'radio' or field.name in radio_fields %}
+          <div class="choices">
+            {% for choice in field %}
+              <label>{{ choice.tag }}<span>{{ choice.choice_label }}</span></label>
+            {% endfor %}
+          </div>
+        {% else %}
+          {{ field }}
+        {% endif %}
+        {{ field.errors }}
+      </div>
+    {% endfor %}
+
+    <button class="btn" style="margin-top:10px">See my matches →</button>
+  </form>
+</div>
+{% endblock %}

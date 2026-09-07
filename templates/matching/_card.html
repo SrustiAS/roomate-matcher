@@ -1,0 +1,28 @@
+<div class="card match-card">
+  <div class="match-head">
+    <div class="ring" data-p="{{ m.score }}"><b>{{ m.score }}%</b></div>
+    <div class="who">
+      <h3>{{ m.user.full_name|default:m.user.username }}</h3>
+      <div class="meta">Age {{ m.user.age|default:"—" }} · {{ m.user.get_year_display|default:"—" }} · {{ m.user.branch|default:"—" }}</div>
+    </div>
+  </div>
+  <div class="tags">
+    <span class="tag">{{ m.pref.get_sleep_type_display }}</span>
+    <span class="tag">📚 {{ m.pref.get_study_habit_display }}</span>
+    <span class="tag">💡 {{ m.pref.get_light_preference_display }}</span>
+    <span class="tag">🏢 {{ m.user.get_preferred_floor_display }}</span>
+  </div>
+  {% if m.reasons %}
+  <ul class="reasons">{% for r in m.reasons %}<li>✓ {{ r }}</li>{% endfor %}</ul>
+  {% endif %}
+  <div class="card-actions">
+    <a href="{% url 'match_detail' m.user.id %}" class="btn btn-ghost btn-sm">View details</a>
+    {% if m.request and m.request.status == 'pending' %}
+      <span class="badge badge-pending">Request {{ m.direction }}</span>
+    {% elif m.request and m.request.status == 'accepted' %}
+      <span class="badge badge-accepted">Matched ✓</span>
+    {% else %}
+      <a href="{% url 'send_request' m.user.id %}" class="btn btn-sm">Send request</a>
+    {% endif %}
+  </div>
+</div>

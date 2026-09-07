@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="section-title"><h2>Hi {{ user.full_name|default:user.username }} 👋</h2>
+  <a href="{% url 'find_roommate' %}" class="btn btn-sm">Find My Roommate</a></div>
+
+{% if not has_prefs %}
+  <div class="card"><h3>Finish your setup</h3>
+    <p class="help">Complete the lifestyle questionnaire to unlock matches.</p>
+    <a href="{% url 'questionnaire' %}" class="btn btn-sm">Complete questionnaire →</a></div>
+{% else %}
+  <div class="grid grid-2">
+    <div class="card">
+      <h3>Your Roommate Compatibility Profile</h3>
+      <div class="tags">
+        <span class="tag">{{ user.preferences.get_sleep_type_display }}</span>
+        <span class="tag">💡 {{ user.preferences.get_light_preference_display }}</span>
+        <span class="tag">📚 {{ user.preferences.get_study_habit_display }}</span>
+        <span class="tag">🔇 {{ user.preferences.get_noise_preference_display }}</span>
+        <span class="tag">🏢 {{ user.get_preferred_floor_display }}</span>
+      </div>
+      <a href="{% url 'profile' %}" class="btn btn-ghost btn-sm">View full profile</a>
+    </div>
+    <div class="card">
+      <h3>Requests</h3>
+      <p style="font-size:2rem;margin:6px 0">{{ pending_count }}</p>
+      <p class="help">pending request(s) waiting for you.</p>
+      <a href="{% url 'requests' %}" class="btn btn-ghost btn-sm">Manage requests</a>
+    </div>
+  </div>
+
+  <div class="section-title"><h2>Recommended roommates</h2>
+    <a href="{% url 'find_roommate' %}" style="color:var(--brand2)">See all →</a></div>
+  {% if top_matches %}
+  <div class="grid grid-2">
+    {% for m in top_matches %}{% include "matching/_card.html" with m=m %}{% endfor %}
+  </div>
+  {% else %}
+  <div class="empty">No other students have completed their profile yet. Check back soon!</div>
+  {% endif %}
+{% endif %}
+{% endblock %}

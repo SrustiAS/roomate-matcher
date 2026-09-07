@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Login · RoomMatch{% endblock %}
+{% block content %}
+<div class="card form-narrow">
+  <h2>Welcome back</h2>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% for field in form %}
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}{{ field.errors }}
+    {% endfor %}
+    {% if form.non_field_errors %}<ul class="errorlist">{% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+    <button class="btn btn-block" style="margin-top:18px">Login</button>
+  </form>
+  <p class="help" style="text-align:center;margin-top:14px">
+    <a href="{% url 'password_reset' %}" style="color:var(--muted)">Forgot password?</a>
+    · <a href="{% url 'signup' %}" style="color:var(--brand2)">Create account</a></p>
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Find Roommate{% endblock %}
+{% block content %}
+<div class="section-title"><h2>Your best matches</h2></div>
+
+<form method="get" class="card">
+  <div class="filters">
+    <div><label>Min compatibility %</label>
+      <input type="number" name="min_score" min="0" max="100" value="{{ filters.min_score }}"></div>
+    <div><label>Floor</label>
+      <select name="floor"><option value="any">Any</option>
+        {% for val,lbl in floor_choices %}<option value="{{ val }}" {% if filters.floor == val|stringformat:'s' %}selected{% endif %}>{{ lbl }}</option>{% endfor %}
+      </select></div>
+    <div><label>Year</label>
+      <select name="year"><option value="">Any</option>
+        {% for val,lbl in year_choices %}<option value="{{ val }}" {% if filters.year == val|stringformat:'s' %}selected{% endif %}>{{ lbl }}</option>{% endfor %}
+      </select></div>
+    <div><label>Sleep</label>
+      <select name="sleep_type"><option value="">Any</option>
+        <option value="night_owl" {% if filters.sleep_type == 'night_owl' %}selected{% endif %}>Night Owl</option>
+        <option value="early_bird" {% if filters.sleep_type == 'early_bird' %}selected{% endif %}>Early Bird</option>
+      </select></div>
+    <div><label>Noise</label>
+      <select name="noise"><option value="">Any</option>
+        <option value="quiet" {% if filters.noise == 'quiet' %}selected{% endif %}>Quiet</option>
+        <option value="moderate" {% if filters.noise == 'moderate' %}selected{% endif %}>Moderate</option>
+        <option value="dont_mind" {% if filters.noise == 'dont_mind' %}selected{% endif %}>Don't mind</option>
+      </select></div>
+    <div><label>Branch contains</label>
+      <input type="text" name="branch" value="{{ filters.branch }}"></div>
+  </div>
+  <div style="margin-top:14px;display:flex;gap:10px">
+    <button class="btn btn-sm">Apply filters</button>
+    <a href="{% url 'find_roommate' %}" class="btn btn-ghost btn-sm">Reset</a>
+  </div>
+</form>
+
+{% if results %}
+<div class="grid grid-2">
+  {% for m in results %}{% include "matching/_card.html" with m=m %}{% endfor %}
+</div>
+{% else %}
+<div class="empty">No matches fit these filters yet. Try loosening them.</div>
+{% endif %}
+{% endblock %}

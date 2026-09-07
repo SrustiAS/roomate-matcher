@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Requests{% endblock %}
+{% block content %}
+<div class="section-title"><h2>Roommate requests</h2></div>
+
+<div class="card">
+  <h3>📥 Received ({{ received.count }})</h3>
+  {% for r in received %}
+    <div class="card-actions" style="justify-content:space-between;border-top:1px solid var(--line);padding-top:12px">
+      <div><b>{{ r.sender.full_name|default:r.sender.username }}</b>
+        <div class="meta help">{{ r.sender.branch }} · {{ r.sender.get_year_display }}</div></div>
+      <div class="card-actions">
+        <a href="{% url 'match_detail' r.sender.id %}" class="btn btn-ghost btn-sm">View</a>
+        <a href="{% url 'respond_request' r.id 'accept' %}" class="btn btn-good btn-sm">Accept</a>
+        <a href="{% url 'respond_request' r.id 'reject' %}" class="btn btn-bad btn-sm">Reject</a>
+      </div>
+    </div>
+  {% empty %}<p class="help">No pending requests.</p>{% endfor %}
+</div>
+
+<div class="card">
+  <h3>📤 Sent ({{ sent.count }})</h3>
+  {% for r in sent %}
+    <div class="card-actions" style="justify-content:space-between;border-top:1px solid var(--line);padding-top:12px">
+      <div><b>{{ r.receiver.full_name|default:r.receiver.username }}</b>
+        <span class="badge badge-{{ r.status }}">{{ r.get_status_display }}</span></div>
+      {% if r.status == 'pending' %}<a href="{% url 'cancel_request' r.id %}" class="btn btn-ghost btn-sm">Cancel</a>{% endif %}
+    </div>
+  {% empty %}<p class="help">You haven't sent any requests.</p>{% endfor %}
+</div>
+
+<div class="card">
+  <h3>🤝 Accepted roommates ({{ accepted.count }})</h3>
+  {% for r in accepted %}
+    {% if r.sender == user %}{% with other=r.receiver %}
+      <p style="border-top:1px solid var(--line);padding-top:10px"><b>{{ other.full_name|default:other.username }}</b> — 📧 {{ other.email }}{% if other.phone %} · 📱 {{ other.phone }}{% endif %}</p>
+    {% endwith %}{% else %}{% with other=r.sender %}
+      <p style="border-top:1px solid var(--line);padding-top:10px"><b>{{ other.full_name|default:other.username }}</b> — 📧 {{ other.email }}{% if other.phone %} · 📱 {{ other.phone }}{% endif %}</p>
+    {% endwith %}{% endif %}
+  {% empty %}<p class="help">No accepted roommates yet.</p>{% endfor %}
+</div>
+{% endblock %}

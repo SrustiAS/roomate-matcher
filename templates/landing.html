@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <h1>Find a Roommate Who Matches Your Vibe.</h1>
+  <p>Match with hostel roommates based on sleep schedules, study habits, light
+     preferences, floor, cleanliness, and lifestyle — not random allocation.</p>
+  <div class="cta-row">
+    <a href="{% url 'signup' %}" class="btn">Find My Roommate</a>
+    <a href="#how" class="btn btn-ghost">How It Works</a>
+  </div>
+  <div class="steps" id="how">
+    <div class="step"><div class="n">1</div><h3>Create Profile</h3>
+      <p style="color:var(--muted)">Tell us your hostel, floor and basics.</p></div>
+    <div class="step"><div class="n">2</div><h3>Get Compatibility Matches</h3>
+      <p style="color:var(--muted)">We score every candidate with a transparent algorithm.</p></div>
+    <div class="step"><div class="n">3</div><h3>Connect</h3>
+      <p style="color:var(--muted)">Send a request. Contact opens only on mutual accept.</p></div>
+  </div>
+</section>
+{% endblock %}

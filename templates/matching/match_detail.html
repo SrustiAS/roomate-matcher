@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Match · {{ other.full_name }}{% endblock %}
+{% block content %}
+<div class="grid grid-2">
+  <div class="card">
+    <div class="match-head">
+      <div class="ring" data-p="{{ data.compatibility_score }}"><b>{{ data.compatibility_score }}%</b></div>
+      <div class="who">
+        <h2 style="margin:0">{{ other.full_name|default:other.username }}</h2>
+        <div class="meta">Age {{ other.age|default:"—" }} · {{ other.get_year_display|default:"—" }} · {{ other.branch|default:"—" }}</div>
+        <div class="meta">🏢 {{ other.get_preferred_floor_display }} · 🏨 {{ other.hostel }}</div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="tag">{{ pref.get_sleep_type_display }}</span>
+      <span class="tag">💡 {{ pref.get_light_preference_display }}</span>
+      <span class="tag">📚 {{ pref.get_study_habit_display }}</span>
+      <span class="tag">🔇 {{ pref.get_noise_preference_display }}</span>
+      <span class="tag">🧹 {{ pref.get_cleanliness_display }}</span>
+    </div>
+
+    <h3 style="margin-top:18px">Why you match</h3>
+    <ul class="reasons">
+      {% for r in data.matching_reasons %}<li>✓ {{ r }}</li>{% empty %}<li class="warn">No strong overlaps found.</li>{% endfor %}
+    </ul>
+
+    {% if data.potential_conflicts %}
+    <h3>Possible differences</h3>
+    <ul class="reasons">
+      {% for c in data.potential_conflicts %}<li class="warn">⚠ {{ c }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+
+    <div class="card-actions">
+      {% if request_obj and request_obj.status == 'accepted' %}
+        <span class="badge badge-accepted">Matched ✓</span>
+      {% elif request_obj and request_obj.status == 'pending' and direction == 'incoming' %}
+        <a href="{% url 'respond_request' request_obj.id 'accept' %}" class="btn btn-good btn-sm">Accept</a>
+        <a href="{% url 'respond_request' request_obj.id 'reject' %}" class="btn btn-bad btn-sm">Reject</a>
+      {% elif request_obj and request_obj.status == 'pending' and direction == 'outgoing' %}
+        <span class="badge badge-pending">Request sent</span>
+        <a href="{% url 'cancel_request' request_obj.id %}" class="btn btn-ghost btn-sm">Cancel</a>
+      {% else %}
+        <a href="{% url 'send_request' other.id %}" class="btn btn-sm">Send roommate request</a>
+      {% endif %}
+    </div>
+
+    {% if contact_unlocked %}
+      <div class="card" style="margin-top:16px;background:#153f33;border-color:#256b53">
+        <h3>🔓 Contact unlocked</h3>
+        <p>Email: {{ other.email }}</p>
+        {% if other.phone %}<p>Phone: {{ other.phone }}</p>{% endif %}
+        <p class="help">Shared because you both accepted. Follow your hostel's rules for room changes.</p>
+      </div>
+    {% else %}
+      <p class="help" style="margin-top:12px">🔒 Contact details stay private until you both accept.</p>
+    {% endif %}
+  </div>
+
+  <div class="card breakdown">
+    <h3>Compatibility breakdown</h3>
+    {% for b in breakdown %}
+      <div class="row">
+        <div class="top"><span>{{ b.label }}</span><b>{{ b.score }}%</b></div>
+        <div class="bar"><i style="width:{{ b.score }}%"></i></div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+<a href="{% url 'find_roommate' %}" class="btn btn-ghost btn-sm" style="margin-top:10px">← Back to matches</a>
+{% endblock %}
