@@ -1,3 +1,5 @@
 Django==5.0.6
-# For PostgreSQL in production, also install:
-# psycopg2-binary==2.9.9
+gunicorn
+psycopg2-binary
+dj-database-url
+whitenoise
