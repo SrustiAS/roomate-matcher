@@ -65,10 +65,9 @@ WSGI_APPLICATION = "roommate_finder.wsgi.application"
 # SQLite for development (default). For production switch to PostgreSQL using
 # the commented block below.
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": dj_database_url.config(
+        default=os.environ.get("DATABASE_URL")
+    )
 }
 # import os
 # DATABASES = {
