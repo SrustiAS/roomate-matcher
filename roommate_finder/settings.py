@@ -7,11 +7,18 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY: replace this in production and load from an environment variable.
-SECRET_KEY = "django-insecure-CHANGE-ME-IN-PRODUCTION-0123456789abcdef"
+import os
+import dj_database_url
 
-DEBUG = True
-ALLOWED_HOSTS = ["*"]  # tighten for production
+SECRET_KEY = os.environ.get("SECRET_KEY", "dev-only-secret-key")
 
+DEBUG = os.environ.get("DEBUG", "False") == "True"
+
+ALLOWED_HOSTS = [
+    "roomate-matcher.onrender.com",
+    "localhost",
+    "127.0.0.1",
+]
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
